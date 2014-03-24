@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.enlightenment.Efreet
+Exec=/usr/local/bin/efreetd

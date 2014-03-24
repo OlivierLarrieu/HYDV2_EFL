@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: efreet-trash
+Description: Freedesktop Shared Trash implementation for the EFL
+Version: 1.9.1
+Requires.private: eina >= 1.9.1 eo >= 1.9.1 eldbus >= 1.9.1 ecore-file >= 1.9.1 ecore >= 1.9.1 eet >= 1.9.1  
+Libs: -L${libdir} -lefreet_trash
+Cflags: -I${includedir}/efl-1 -I${includedir}/efreet-1

@@ -1,0 +1,13 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: eldbus
+Description: D-Bus access from Ecore
+Requires.private: dbus-1 eina >= 1.9.1 eo >= 1.9.1 ecore >= 1.9.1  
+Version: 1.9.1
+Libs: -L${libdir} -leldbus
+Libs.private: 
+Cflags: -I${includedir}/efl-1 -I${includedir}/eldbus-1
+

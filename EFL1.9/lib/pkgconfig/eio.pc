@@ -1,0 +1,12 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: eio
+Description: Enlightenned Asynchronous Input Output library
+Requires.private: eina >= 1.9.1 eo >= 1.9.1 eet >= 1.9.1 ecore >= 1.9.1  
+Version: 1.9.1
+Libs: -L${libdir} -leio
+Libs.private:  -lm
+Cflags: -I${includedir}/efl-1 -I${includedir}/eio-1

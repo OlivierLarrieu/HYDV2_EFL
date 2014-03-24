@@ -1,0 +1,12 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: evas
+Description: Evas canvas display library
+Requires.private: libpng >= 1.2.10 fribidi >= 0.19.2 fontconfig >= 2.5.0 freetype2 >= 9.3.0 eina >= 1.9.1 eet >= 1.9.1 eo >= 1.9.1  
+Version: 1.9.1
+Libs: -L${libdir} -levas
+Libs.private: -ljpeg  -ldl -lm  -lrt
+Cflags: -I${includedir}/efl-1 -I${includedir}/evas-1
