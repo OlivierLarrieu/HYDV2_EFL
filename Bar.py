@@ -32,6 +32,7 @@ from efl.elementary.layout import Layout
 from efl.elementary.check import Check
 from efl.elementary.frame import Frame
 from efl.elementary.label import Label
+
 from efl.evas import EVAS_HINT_EXPAND, EVAS_HINT_FILL, \
     EVAS_ASPECT_CONTROL_VERTICAL, Rectangle
 
@@ -74,27 +75,25 @@ class ItemClass(GenlistItemClass):
             ic = Icon(obj, file=ADD_ICON,
                       propagate_events=False,
                       size_hint_aspect=(EVAS_ASPECT_CONTROL_VERTICAL, 1, 1))
-            ic.callback_clicked_add(self.test, data)
+            ic.callback_clicked_add(data['callback'], data)
+
             return ic
         elif part == "elm.edit.icon.1":
             try:
                 icn = Icon(obj, file=data['icon'],
                            propagate_events=False,
                            size_hint_aspect=(EVAS_ASPECT_CONTROL_VERTICAL, 1, 1))
+
                 return icn
             except:
                 return
         else:
             return
 
-    def test(self, e, data):
-        print data['name']
-        print data['icon']
-        print data['command']
-
 
 class AppsMenu(object):
-    def __init__(self):
+    def __init__(self, Bar):
+        self.Bar = Bar
         self.window = _Window(title="",
                               window_type=ELM_WIN_DOCK,
                               width=250,
@@ -159,11 +158,9 @@ class AppsMenu(object):
 
     def generate_applications_list(self):
         apps_dic = HydvMenu.HydvDesktopEntries.get_applications()
-        print apps_dic.keys()
         categories = [cat for cat in apps_dic]
         categories.sort()
         for item in categories:
-            print item
             self.git = self.application_list.item_append(self.category_header,
                                                          {'name': item,
                                                           'icon': HydvMenu.HydvDesktopEntries.findicon(item)},
@@ -175,7 +172,7 @@ class AppsMenu(object):
                     try:
                         self.application_list.item_append(self.application_header,
                                                           {'name': cat[app]['name'], 'command': cat[app]['command'],
-                                                           'icon': cat[app]['icon']},
+                                                           'icon': cat[app]['icon'], "callback": self.add_fav_apps},
                                                           self.git,
                                                           flags=ELM_GENLIST_ITEM_NONE, func=self.launch_app)
                         self.application_list.callback_drag_start_down_add(func=self.launch_app,
@@ -183,6 +180,9 @@ class AppsMenu(object):
 
                     except:
                         pass
+
+    def add_fav_apps(self, a, datas):
+        self.Bar.add_fav_app(datas)
 
 
     def launch_app(self, li, u, args):
@@ -193,7 +193,7 @@ class AppsMenu(object):
 class Bar(object):
     def __init__(self):
         # Applications Menu Window
-        self.apps_window = AppsMenu()
+        self.apps_window = AppsMenu(self)
         # Desktop Window
         self.background_window = BackgroundWindow()
         # principal window
@@ -205,10 +205,26 @@ class Bar(object):
                               pos_y=0,
                               show=True,
                               transparent=False).win
+
+        self.popup = _Window(title="",
+                              window_type=ELM_WIN_DOCK,
+                              width=200,
+                              height=20,
+                              pos_x=0,
+                              pos_y=0,
+                              show=False,
+                              transparent=False).win
+
         # principal window background
         self.window_background = Background(self.window, size_hint_weight=EXPAND_BOTH)
         self.window_background.show()
         self.window.resize_object_add(self.window_background)
+
+        # principal window background
+        self.popup_background = Background(self.popup, size_hint_weight=EXPAND_BOTH)
+        self.popup_background.show()
+        self.popup.resize_object_add(self.popup_background)
+
         # principal window grid
         self.window_grid = Grid(self.window, size=(screen_x, 40), size_hint_weight=EXPAND_BOTH,
                                 size_hint_align=FILL_BOTH)
@@ -224,12 +240,10 @@ class Bar(object):
         menu_button_icon.show()
         # Hybryde button
         button_hybryde = Button(self.window, text="Hybryde")
-        ###button_hybryde.callback_clicked_add(self.show_menu, self.apps_window)
         self.window_grid.pack(button_hybryde, 110, 0, 100, 20)
         button_hybryde.show()
         # Magic button
         button_magic = Button(self.window, text="Magic")
-        ###button_magic.callback_clicked_add(self.show_desk, self.window.win)
         self.window_grid.pack(button_magic, 110, 20, 100, 20)
         button_magic.show()
         # top button
@@ -243,13 +257,6 @@ class Bar(object):
         self.window_grid.pack(button_bottom, 110, 20, 142, 20)
         button_bottom.show()
 
-        # box favorites icons container
-        #self.favorites_applications_container = Box(self.window, horizontal=True, size_hint_weight=EXPAND_BOTH)
-
-        #self.favorites_applications_container.show()
-
-        self.ONLY_FAKE()
-
         from efl.elementary.clock import Clock, ELM_CLOCK_EDIT_HOUR_DECIMAL, \
             ELM_CLOCK_EDIT_MIN_DECIMAL, ELM_CLOCK_EDIT_SEC_DECIMAL
 
@@ -259,21 +266,35 @@ class Bar(object):
 
         self.open = False
         self.screen_position = "top"
-
-    def ONLY_FAKE(self):
         self.start_point = 270
-        fake_icons = os.listdir(os.path.realpath('.') + "/HydvMenu/base/categories/")
-        for i in fake_icons:
-            ic = Icon(self.window, file=os.path.realpath('.') + "/HydvMenu/base/categories/" + i,
-                      resizable=(True, True), size=(30, 30),
-                      size_hint_weight=EXPAND_BOTH,
-                      size_hint_align=FILL_BOTH)
 
-            #self.favorites_applications_container.pack_end(ic)
-            self.window_grid.pack(ic, self.start_point, 5, 30, 30)
+    def add_fav_app(self, data):
+        ic = Icon(self.window, file=data['icon'],
+                  resizable=(True, True), size=(30, 30),
+                  size_hint_weight=EXPAND_BOTH,
+                  size_hint_align=FILL_BOTH)
+        ic.callback_clicked_add(self.launch_app, data['command'])
+        self.window_grid.pack(ic, self.start_point, 5, 30, 30)
+        ic.on_mouse_in_add(self.mouseover)
+        ic.on_mouse_out_add(self.mouseout)
 
-            ic.show()
-            self.start_point += 35
+        ic.pos =(self.start_point,0)
+
+        ic.show()
+        self.start_point += 35
+
+    def mouseover(self, ic,y):
+        ic.size = (32,32)
+        self.popup.move(ic.pos[0]-80, 50)
+        self.popup.show()
+
+    def mouseout(self, ic,y):
+        ic.size = (30,30)
+        self.popup.hide()
+
+
+    def launch_app(self, u, command):
+        os.system(command + ' &')
 
     def top(self, e):
         self.apps_window.window.move(0, 40)
@@ -285,10 +306,6 @@ class Bar(object):
         self.apps_window.window.move(0, screen_y - 440)
         self.window.move(0, screen_y - 40)
         self.screen_position = "bottom"
-
-
-    def show_desk(self, b):
-        win.hide()
 
 
     def resize(self, ic):
@@ -307,7 +324,7 @@ class Bar(object):
             self.apps_window.window.show()
             self.open = True
 
-
-bar = Bar()
-elementary.run()
-elementary.shutdown()
+if __name__ == "__main__":
+    bar = Bar()
+    elementary.run()
+    elementary.shutdown()
