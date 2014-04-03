@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 __author__ = 'larrieu'
 from efl import elementary
 from efl.elementary.window import Window, ELM_WIN_BASIC, ELM_WIN_DESKTOP, ELM_WIN_DOCK

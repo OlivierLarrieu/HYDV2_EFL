@@ -7,9 +7,10 @@ BACKGROUND_FILE = "Images/Fusion.png"
 ADD_ICON = "Images/add.png"
 
 import os
-
 import sys
+
 import HydvMenu
+
 
 sys.path.append(os.path.realpath('.') + '/EFL1.9/lib/python2.7/dist-packages/')
 
@@ -20,25 +21,17 @@ screen_x, screen_y = Gdk.Screen.width(), Gdk.Screen.height()
 from efl import elementary
 from efl.elementary.box import Box
 from efl.elementary.icon import Icon
-from elementary_window import _Window
-from efl.elementary.window import Window, ELM_WIN_BASIC, ELM_WIN_DESKTOP, ELM_WIN_DOCK
+from Hydv2.elementary_window import _Window
+from efl.elementary.window import ELM_WIN_DESKTOP, ELM_WIN_DOCK
 from efl.elementary.background import Background
-from efl.elementary.image import Image
-from efl.evas import EVAS_HINT_EXPAND, EVAS_HINT_FILL
 from efl.elementary.grid import Grid
 from efl.elementary.button import Button
-from efl.elementary.entry import Entry
-from efl.elementary.layout import Layout
-from efl.elementary.check import Check
-from efl.elementary.frame import Frame
-from efl.elementary.label import Label
 
 from efl.evas import EVAS_HINT_EXPAND, EVAS_HINT_FILL, \
-    EVAS_ASPECT_CONTROL_VERTICAL, Rectangle
+    EVAS_ASPECT_CONTROL_VERTICAL
 
-from efl.elementary.genlist import Genlist, GenlistItem, GenlistItemClass, \
-    ELM_GENLIST_ITEM_NONE, ELM_OBJECT_SELECT_MODE_ALWAYS, \
-    ELM_OBJECT_SELECT_MODE_DEFAULT, ELM_GENLIST_ITEM_GROUP, \
+from efl.elementary.genlist import Genlist, GenlistItemClass, \
+    ELM_GENLIST_ITEM_NONE, ELM_GENLIST_ITEM_GROUP, \
     ELM_OBJECT_SELECT_MODE_DISPLAY_ONLY
 
 EXPAND_BOTH = EVAS_HINT_EXPAND, EVAS_HINT_EXPAND
@@ -112,7 +105,7 @@ class AppsMenu(object):
         self.window.resize_object_add(self.window_grid)
         self.window_grid.show()
 
-        from efl.elementary.list import List, ELM_LIST_LIMIT, ELM_LIST_COMPRESS
+        from efl.elementary.list import List
 
         self.window_list_box = Box(self.window, size_hint_weight=EXPAND_BOTH, size_hint_align=FILL_BOTH)
         #self.window.resize_object_add(self.window_list_box)
@@ -257,8 +250,7 @@ class Bar(object):
         self.window_grid.pack(button_bottom, 110, 20, 142, 20)
         button_bottom.show()
 
-        from efl.elementary.clock import Clock, ELM_CLOCK_EDIT_HOUR_DECIMAL, \
-            ELM_CLOCK_EDIT_MIN_DECIMAL, ELM_CLOCK_EDIT_SEC_DECIMAL
+        from efl.elementary.clock import Clock
 
         self.clock = Clock(self.window, show_seconds=True)
         self.window_grid.pack(self.clock, screen_x - 60, 10, 60, 20)
