@@ -3,8 +3,6 @@
 
 __author__ = 'Olivier Larrieu'
 
-from gtk import gdk
-
 
 class ScreenProperties(object):
     """
@@ -16,6 +14,9 @@ class ScreenProperties(object):
         """
             Return a dic with the screen height and screen width
         """
-        width = gdk.screen_width()
-        height = gdk.screen_height()
-        return {'width': width, 'height': height}
+        from Xlib import display
+        display = display.Display()
+        root = display.screen().root
+        desktop = root.get_geometry()
+
+        return {'width': desktop.width, 'height': desktop.height}
