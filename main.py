@@ -6,11 +6,11 @@ __author__ = 'olivier larrieu'
 import sys
 from efl import elementary
 if __name__ == "__main__":
-    try:
+    """try:
         from efl import elementary
     except ImportError:
         print "Please check if python EFL 1.9 is installed or do not launch directly Hydv2 from here."
-        sys.exit(1)
+        sys.exit(1)"""
     from Hydv2.Panel import Panel
     from Hydv2.Backround import BackgroundWindow
     from optparse import OptionParser
