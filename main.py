@@ -4,7 +4,7 @@
 __author__ = 'olivier larrieu'
 
 import sys
-
+from efl import elementary
 if __name__ == "__main__":
     try:
         from efl import elementary
