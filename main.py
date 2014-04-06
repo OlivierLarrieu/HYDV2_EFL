@@ -1,15 +1,16 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
 __author__ = 'olivier larrieu'
 import os
 import sys
-sys.path.append(os.path.dirname(__file__) + 'EFL1.9/lib/python2.7/dist-packages/')
+sys.path.append(os.path.realpath('.') + '/EFL1.9/lib/python2.7/dist-packages/')
 
 if __name__ == "__main__":
     try:
         from efl import elementary
     except ImportError:
+	raise
         print "Please check if python EFL 1.9 is installed or do not launch directly Hydv2 from here."
         sys.exit(1)
     from Hydv2.Panel import Panel
