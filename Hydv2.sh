@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export LD_LIBRARY_PATH=$PWD/EFL1.9/lib/
+export LD_LIBRARY_PATH=$PWD/EFL1.9/lib/:$PWD/lib/
 python main.py
 
 echo "exit Hydv2"
